@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #box {
+            padding: 200px;
+        }
+        
+        .divbox {
+            width: 200px;
+            height: 200px;
+            float: left;
+            border: 1px dashed #ccc;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<script>
+    function dragfn(ev) {
+        console.log(ev)
+        ev.dataTransfer.setData("Text", ev.target.id)
+    }
+
+    function dragoverfn(ev) {
+        ev.preventDefault();
+    }
+
+    function dropfn(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("Text");
+        ev.target.appendChild(document.getElementById(data))
+    }
+</script>
+
+<body>
+    <div id="box">
+        <div ondragover="dragoverfn(event)" ondrop="dropfn(event)" class="divbox" id="box2"></div>
+        <div ondragover="dragoverfn(event)" ondrop="dropfn(event)" class="divbox" id="box3"></div>
+        <div ondragover="dragoverfn(event)" ondrop="dropfn(event)" class="divbox" id="box4"></div>
+        <div ondragover="dragoverfn(event)" ondrop="dropfn(event)" class="divbox" id="box5"></div>
+        <div ondragover="dragoverfn(event)" ondrop="dropfn(event)" class="divbox" id="box1"></div>
+    </div>
+
+    <img ondragover="dragoverfn(event)" ondrop="return" ondragstart="dragfn(event)" draggable="true" id="img1" title="1" src="./1.jpg" alt="" class="img">
+    <img ondragover="dragoverfn(event)" ondrop="return" ondragstart="dragfn(event)" draggable="true" id="img2" title="2" src="./1.jpg" alt="" class="img">
+    <img ondragover="dragoverfn(event)" ondrop="return" ondragstart="dragfn(event)" draggable="true" id="img3" title="3" src="./1.jpg" alt="" class="img">
+    <img ondragover="dragoverfn(event)" ondrop="return" ondragstart="dragfn(event)" draggable="true" id="img4" title="4" src="./1.jpg" alt="" class="img">
+    <img ondragover="dragoverfn(event)" ondrop="return" ondragstart="dragfn(event)" draggable="true" id="img5" title="5" src="./1.jpg" alt="" class="img">
+</body>
+
+</html>
