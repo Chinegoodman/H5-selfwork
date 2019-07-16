@@ -10,6 +10,14 @@
             padding: 0;
             margin: 0;
         }
+        
+        #cvs {
+            display: block;
+            margin: 20px auto;
+            width: 800px;
+            height: 800px;
+            background-color: #ccc;
+        }
     </style>
 </head>
 
@@ -17,8 +25,10 @@
     <audio id="music" src="./music/test.mp3"></audio>
     <canvas id="cvs" width="800" height="600"></canvas>
 
-    <button onclick="bofang()">播放</button>
-    <button onclick="zanting()">暂停</button>
+    <div>
+        <button onclick="bofang()">播放</button>
+        <button onclick="zanting()">暂停</button>
+    </div>
     <script>
         let getdataArray_status = false;
 
@@ -65,7 +75,7 @@
                        画出来能量柱高度就是0了，为了效果好一点，所以只取前60%，
                        如果为了真实可以不乘以0.6
                     */
-                step = Math.round(arrData.length / count),
+                step = Math.round(arrData.length * 0.8 / count),
                 // step = Math.round(arrData.length / count),
                 value = 0, //每个能量柱的值
                 drawX = 0, //能量柱X轴位置
@@ -81,25 +91,25 @@
             context.lineWidth = lineWidth;
             //渲染函数
             function render() {
-                //每次要清除画布
+                // 每次要清除画布
                 context.clearRect(0, 0, 800, 800);
-                context.arc(400, 400, 200, 0, 2 * Math.PI);
-                context.fillStyle = 'rgb(0,200,150)';
-                context.fill();
+                // context.arc(400, 400, 200, 0, 2 * Math.PI);
+                // context.fillStyle = 'rgba(0,200,150,0.4)';
+                // context.fill();
                 //获取频谱值
                 analyser.getByteFrequencyData(arrData);
-                console.log(arrData);
-                for (var i = 0; i < count; i = i + 3) {
+                // console.log(arrData);
+                for (var i = 0; i < count; i++) {
                     //前面已经计算好步长了
                     value = arrData[i * step + step];
                     //X轴位置计算
-                    drawX = 20;
+                    drawX = 2;
                     /*能量柱的高度，从canvas的底部往上画，那么Y轴坐标就是画布的高度减去能量柱的高度，
                                而且经测试发现value正常一般都比较小，要画的能量柱高一点，所以就乘以2，
                                又防止太高，取了一下最大值，并且canvas里面尽量避免小数值，取整一下
                              */
                     // drawY = parseInt(Math.max((height - value * 2), 10));
-                    drawY = parseInt(Math.max((height - value) / 2, 10));
+                    drawY = value;
                     //开始一条路径
                     context.beginPath();
                     /*设置画笔颜色，hsl通过这个公式出来的是很漂亮的彩虹色
@@ -111,19 +121,25 @@
                     context.strokeStyle = "hsl( " + Math.round((i * 360) / count) + ", 100%, 50%)";
                     //从X轴drawX，Y轴就是canvas的高度，也就是canvas的底部
                     // context.moveTo(drawX, height);
-                    context.moveTo(400, 400);
-                    //从X轴drawX，Y轴就是计算好的Y轴，是从下往上画，这么理解
-                    context.lineTo(400, 200 + drawY * 0.7);
 
-                    // 移动
+                    context.save();
+
                     context.translate(400, 400);
                     //旋转
-                    context.rotate(i * Math.PI / 180);
+                    context.rotate(i * Math.PI / 50);
+                    context.moveTo(0, 100);
+                    //从X轴drawX，Y轴就是计算好的Y轴，是从下往上画，这么理解
+                    context.lineTo(0, 100 + drawY);
+                    // 给drawY预留300像素的空间
+
+
 
                     /*stroke方法才是真正的绘制方法,顺便也相当于结束了这次的绘画路径，
                                就不用调用closePath方法了
                             */
+                    // context.closePath();
                     context.stroke();
+                    context.restore();
                 }
                 //用requestAnimationFrame做动画
                 requestAnimationFrame(render);
