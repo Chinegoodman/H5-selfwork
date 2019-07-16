@@ -12,31 +12,18 @@
         }
         
         #cvs {
-            display: block;
-            width: 800px;
-            height: 800px;
-            /* animation: rotate 6s linear infinite; */
-        }
-        
-        @keyframes rotate {
-            0% {
-                transform: rotate(0deg)
-            }
-            100% {
-                transform: rotate(360deg)
-            }
+            width: 1800px;
+            height: 600px;
         }
     </style>
 </head>
 
 <body>
-    <audio id="music" controls src="./music/test.mp3"></audio>
+    <audio id="music" src="./music/test.mp3"></audio>
     <canvas id="cvs" width="800" height="600"></canvas>
 
-    <div>
-        <button onclick="bofang()">播放</button>
-        <button onclick="zanting()">暂停</button>
-    </div>
+    <button onclick="bofang()">播放</button>
+    <button onclick="zanting()">暂停</button>
     <script>
         let getdataArray_status = false;
 
@@ -54,15 +41,12 @@
             audio.pause();
             // getdataArray();
         }
-
+        // audio.src="http://ooo0o.com/39721201904270414309697.mp3";
         function getdataArray() {
             let audio = document.getElementById('music');
             let canvas = document.getElementById('cvs');
-            canvas.height = 800;
-            canvas.width = 800;
             let context = canvas.getContext("2d");
             audio.crossOrigin = "anonymous";
-
             //创建境况
             var AudioContext = window.AudioContext || window.webkitAudioContext;
             var audioContext = new AudioContext();
@@ -93,32 +77,26 @@
                 height = canvas.height, //canvas高度
                 width = canvas.width, //canvas宽度
                 //能量柱宽度，设置线条宽度
-                // lineWidth = context.lineWidth = canvas.width / count;
-                lineWidth = context.lineWidth = 10;
+                lineWidth = context.lineWidth = canvas.width / count;
             //设置线条宽度
             context.lineWidth = lineWidth;
             //渲染函数
             function render() {
-                console.log('render')
-                    // 每次要清除画布
-                context.clearRect(0, 0, 800, 800);
-                context.arc(400, 400, 400, 0, 2 * Math.PI);
-                context.fillStyle = '#ccc';
-                context.fill();
+                //每次要清除画布
+                context.clearRect(0, 0, width, height);
                 //获取频谱值
                 analyser.getByteFrequencyData(arrData);
-                // console.log(arrData);
+                console.log(arrData);
                 for (var i = 0; i < count; i++) {
                     //前面已经计算好步长了
                     value = arrData[i * step + step];
                     //X轴位置计算
-                    drawX = 2;
+                    drawX = i * lineWidth;
                     /*能量柱的高度，从canvas的底部往上画，那么Y轴坐标就是画布的高度减去能量柱的高度，
                                而且经测试发现value正常一般都比较小，要画的能量柱高一点，所以就乘以2，
                                又防止太高，取了一下最大值，并且canvas里面尽量避免小数值，取整一下
                              */
-                    // drawY = parseInt(Math.max((height - value * 2), 10));
-                    drawY = value;
+                    drawY = parseInt(Math.max((height - value * 2), 10));
                     //开始一条路径
                     context.beginPath();
                     /*设置画笔颜色，hsl通过这个公式出来的是很漂亮的彩虹色
@@ -129,27 +107,13 @@
                      */
                     context.strokeStyle = "hsl( " + Math.round((i * 360) / count) + ", 100%, 50%)";
                     //从X轴drawX，Y轴就是canvas的高度，也就是canvas的底部
-                    // context.moveTo(drawX, height);
-
-                    context.save();
-
-                    context.translate(400, 400);
-                    //旋转
-                    context.rotate(i * Math.PI / 50);
-                    context.moveTo(0, 100);
+                    context.moveTo(drawX, height);
                     //从X轴drawX，Y轴就是计算好的Y轴，是从下往上画，这么理解
-                    context.lineTo(0, 100 + drawY);
-                    // 给drawY预留300像素的空间
-
-
-
+                    context.lineTo(drawX, drawY);
                     /*stroke方法才是真正的绘制方法,顺便也相当于结束了这次的绘画路径，
                                就不用调用closePath方法了
                             */
-                    // context.closePath();
-
                     context.stroke();
-                    context.restore();
                 }
                 //用requestAnimationFrame做动画
                 requestAnimationFrame(render);
