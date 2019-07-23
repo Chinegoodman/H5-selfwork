@@ -18,6 +18,13 @@
             /* animation: rotate 6s linear infinite; */
         }
         
+        #cvsshow {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: 0 auto;
+        }
+        
         @keyframes rotate {
             0% {
                 transform: rotate(0deg)
@@ -33,12 +40,16 @@
     <audio id="music" controls src="./music/test.mp3"></audio>
     <canvas id="cvs" width="800" height="600"></canvas>
 
+    <!-- <image id="cvsshow" /> -->
+
+
     <div>
         <button onclick="bofang()">播放</button>
         <button onclick="zanting()">暂停</button>
     </div>
     <script>
         let getdataArray_status = false;
+        let getdataArrayfun_status = true;
 
         function bofang() {
             let audio = document.getElementById('music');
@@ -46,6 +57,7 @@
                 getdataArray();
                 getdataArray_status = true;
             }
+            getdataArrayfun_status = true;
             audio.play();
         }
 
@@ -53,6 +65,7 @@
             let audio = document.getElementById('music');
             audio.pause();
             // getdataArray();
+            getdataArrayfun_status = false;
         }
 
         function getdataArray() {
@@ -99,6 +112,10 @@
             context.lineWidth = lineWidth;
             //渲染函数
             function render() {
+                if (!getdataArrayfun_status) {
+                    console.log(11);
+                    return;
+                }
                 console.log('render')
                     // 每次要清除画布
                 context.clearRect(0, 0, 800, 800);
@@ -150,9 +167,14 @@
 
                     context.stroke();
                     context.restore();
+
+                    // document.getElementById('cvsshow').src = canvas.toDataURL("image/png");
                 }
                 //用requestAnimationFrame做动画
                 requestAnimationFrame(render);
+                // document.getElementById('cvsshow').onload = function() {
+                // render();
+                // }
             }
             render()
         }
