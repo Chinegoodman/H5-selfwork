@@ -1,28 +1,14 @@
-let getdataArray_status = false;
-
-function bofang() {
-    let audio = document.getElementById('music');
-    if (!getdataArray_status) {
-        getdataArray();
-        getdataArray_status = true;
-    }
-    audio.play();
-}
-
-function zanting() {
-    let audio = document.getElementById('music');
-    audio.pause();
-    // getdataArray();
-}
-
-function getdataArray() {
-    let audio = document.getElementById('music');
-    let canvas = document.getElementById('cvs');
-    canvas.height = 800;
-    canvas.width = 800;
+// 参数：画布元素。画布的默认宽度。音频元素【注意：画布元素必须设置一个方形的父级容器。代码中已做好适配缩放的设置】
+// cvsgetready(document.getElementById('cvs'),800,document.getElementById('music'));
+function cvsgetready(cvs_dom, cvs_dom_wh, audio_dom, bgcolor) {
+    let audio = audio_dom;
+    let canvas = cvs_dom;
+    canvas.height = cvs_dom_wh;
+    canvas.width = cvs_dom_wh;
+    // 缩放
+    canvas.style.transform = 'scale(' + cvs_dom.parentNode.offsetWidth / cvs_dom.offsetWidth + ')'
     let context = canvas.getContext("2d");
     audio.crossOrigin = "anonymous";
-
     //创建境况
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var audioContext = new AudioContext();
@@ -46,24 +32,18 @@ function getdataArray() {
         step = Math.round(arrData.length * 0.8 / count),
         // step = Math.round(arrData.length / count),
         value = 0, //每个能量柱的值
-        drawX = 0, //能量柱X轴位置
         drawY = 0, //能量柱Y轴坐标
-        // height = canvas.height = window.innerHeight,//canvas高度
-        // width = canvas.width = window.innerWidth,//canvas宽度
-        height = canvas.height, //canvas高度
-        width = canvas.width, //canvas宽度
         //能量柱宽度，设置线条宽度
-        // lineWidth = context.lineWidth = canvas.width / count;
-        lineWidth = context.lineWidth = 10;
+        lineWidth = 10;
     //设置线条宽度
     context.lineWidth = lineWidth;
     //渲染函数
     function render() {
-        console.log('render')
-            // 每次要清除画布
-        context.clearRect(0, 0, 800, 800);
-        context.arc(400, 400, 400, 0, 2 * Math.PI);
-        context.fillStyle = '#ccc';
+        // 每次要清除画布
+        context.clearRect(0, 0, cvs_dom_wh, cvs_dom_wh);
+        context.arc(cvs_dom_wh / 2, cvs_dom_wh / 2, 400, 0, 2 * Math.PI);
+        context.fillStyle = bgcolor || 'rgba(255,255,255,1)';
+        // context.fillStyle = bgcolor || 'rgba(0,0,0,1)';
         context.fill();
         //获取频谱值
         analyser.getByteFrequencyData(arrData);
@@ -71,8 +51,6 @@ function getdataArray() {
         for (var i = 0; i < count; i++) {
             //前面已经计算好步长了
             value = arrData[i * step + step];
-            //X轴位置计算
-            drawX = 2;
             /*能量柱的高度，从canvas的底部往上画，那么Y轴坐标就是画布的高度减去能量柱的高度，
                        而且经测试发现value正常一般都比较小，要画的能量柱高一点，所以就乘以2，
                        又防止太高，取了一下最大值，并且canvas里面尽量避免小数值，取整一下
@@ -90,24 +68,15 @@ function getdataArray() {
             context.strokeStyle = "hsl( " + Math.round((i * 360) / count) + ", 100%, 50%)";
             //从X轴drawX，Y轴就是canvas的高度，也就是canvas的底部
             // context.moveTo(drawX, height);
-
             context.save();
-
-            context.translate(400, 400);
+            context.translate(cvs_dom_wh / 2, cvs_dom_wh / 2);
             //旋转
             context.rotate(i * Math.PI / 50);
             context.moveTo(0, 100);
-            //从X轴drawX，Y轴就是计算好的Y轴，是从下往上画，这么理解
             context.lineTo(0, 100 + drawY);
-            // 给drawY预留300像素的空间
-
-
-
-            /*stroke方法才是真正的绘制方法,顺便也相当于结束了这次的绘画路径，
-                       就不用调用closePath方法了
-                    */
-            // context.closePath();
-
+            //stroke方法才是真正的绘制方法,顺便也相当于结束了这次的绘画路径,就不用调用closePath方法了
+            //之前的是水平排布显示条块，不需要 但此处是做了圆圈布局显示需要闭合一下如果不闭合。会出现收尾相连进行描绘的操作。既会出现白色的条块显示bug
+            context.closePath();
             context.stroke();
             context.restore();
         }

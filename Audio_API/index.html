@@ -11,11 +11,21 @@
             margin: 0;
         }
         
+        #cvsbox {
+            width: 210px;
+            height: 210px;
+            position: relative;
+        }
+        
         #cvs {
             display: block;
-            width: 800px;
-            height: 800px;
+            /* width: 800px; */
+            /* height: 800px; */
             /* animation: rotate 6s linear infinite; */
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform-origin: 0 0;
         }
         
         @keyframes rotate {
@@ -30,14 +40,34 @@
 </head>
 
 <body>
-    <audio id="music" controls src="./music/test.mp3"></audio>
-    <canvas id="cvs" width="800" height="600"></canvas>
+    <audio style="display: none;" id="music" controls src="./music/test.mp3"></audio>
+    <div id="cvsbox">
+        <canvas id="cvs" width="800" height="600"></canvas>
+    </div>
 
-    <div>
+    <div style="position: fixed;right:0;top:0;">
         <button onclick="bofang()">播放</button>
         <button onclick="zanting()">暂停</button>
     </div>
     <script src="./music_canvas_show.js"></script>
+    <script>
+        let audio_status = false;
+
+        function bofang() {
+            if (!audio_status) {
+                document.getElementById('music').play();
+            }
+        }
+
+        function zanting() {
+            document.getElementById('music').pause();
+            audio_status = false;
+        }
+
+        window.onload = function() {
+            cvsgetready(document.getElementById('cvs'), 800, document.getElementById('music'));
+        }
+    </script>
 </body>
 
 </html>
