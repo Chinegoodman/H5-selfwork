@@ -14,7 +14,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="152" />
     <option name="y" value="76" />
     <option name="width" value="1626" />
@@ -59,14 +59,15 @@
       <option name="presentableId" value="Default" />
       <updated>1563025465577</updated>
       <workItem from="1563025467068" duration="642000" />
+      <workItem from="1564020268635" duration="599000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="642000" />
+    <option name="totallyTimeSpent" value="1241000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="152" y="76" width="1626" height="1014" extended-state="1" />
+    <frame x="152" y="76" width="1626" height="1014" extended-state="0" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6781116" visible="true" weight="0.22481108" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
