@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <header name="Access-Control-Allow-Origin" value="*" />
     <title>Title</title>
     <style>
         * {
@@ -15,6 +16,9 @@
             width: 210px;
             height: 210px;
             position: relative;
+            /* background-color: royalblue; */
+            background: url('http://ooo0o.com/4eafc201905200012388758.jpg') center center no-repeat;
+            background-size: cover;
         }
         
         #cvs {
@@ -40,7 +44,8 @@
 </head>
 
 <body>
-    <audio style="display: none;" id="music" controls src="./music/test.mp3"></audio>
+    <!-- <audio style="display: none;" id="music" controls src="./music/test.mp3"></audio> -->
+    <audio style="display: none;" id="music" controls src="http://ooo0o.com/39721201904270414309697.mp3"></audio>
     <div id="cvsbox">
         <canvas id="cvs" width="800" height="600"></canvas>
     </div>
@@ -65,7 +70,7 @@
         }
 
         window.onload = function() {
-            cvsgetready(document.getElementById('cvs'), 800, document.getElementById('music'));
+            cvsgetready(document.getElementById('cvs'), 800, document.getElementById('music'), 'rgba(66,66,66,0.6)');
         }
     </script>
 </body>
